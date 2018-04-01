@@ -18,7 +18,7 @@ dir.create("MW_GS250", showWarnings = F)
 setwd("./MW_GS250")
 
 # download GeoSurvey data
-download("https://www.dropbox.com/s/lxh9gb5moqf3gz8/mw_buildings_2018.csv?raw=1", "mw_buildings_2018.csv.zip", mode = "wb")
+download("https://www.dropbox.com/s/utnsml3szjlyg5b/mw_buildings_2018.csv.zip?raw=1", "mw_buildings_2018.csv.zip", mode = "wb")
 unzip("mw_buildings_2018.csv.zip", overwrite = T)
 geos <- read.table("mw_buildings_2018.csv", header = T, sep = ",")
 
@@ -51,7 +51,6 @@ projection(geos) <- projection(grids)
 # extract gridded variables at GeoSurvey locations
 geosgrid <- extract(grids, geos)
 gsdat <- as.data.frame(cbind(geos, geosgrid)) 
-gsdat <- na.omit(gsdat) ## includes only complete cases
 gsdat <- gsdat[!duplicated(gsdat), ] ## removes any duplicates 
 gsdat$user <- sub("@.*", "", as.character(gsdat$user)) ## shortens observer ID's
 
