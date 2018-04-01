@@ -21,6 +21,7 @@ setwd("./MW_GS250")
 download("https://www.dropbox.com/s/utnsml3szjlyg5b/mw_buildings_2018.csv.zip?raw=1", "mw_buildings_2018.csv.zip", mode = "wb")
 unzip("mw_buildings_2018.csv.zip", overwrite = T)
 geos <- read.table("mw_buildings_2018.csv", header = T, sep = ",")
+geos$BIC <- as.factor(ifelse(geos$CP == "Y" & geos$BP == "Y", "Y", "N")) ## identifies croplands with buildings
 
 # download GADM-L3 shapefile (courtesy: http://www.gadm.org)
 download("https://www.dropbox.com/s/o5g7lk5669d55eb/MWI_adm3.zip?raw=1", "MWI_adm3.zip", mode = "wb")
