@@ -51,7 +51,8 @@ projection(geos) <- projection(grids)
 # extract gridded variables at GeoSurvey locations
 geosgrid <- extract(grids, geos)
 gsdat <- as.data.frame(cbind(geos, geosgrid)) 
-gsdat <- gsdat[!duplicated(gsdat), ] ## removes any duplicates 
+gsdat <- gsdat[!duplicated(gsdat), ] ## removes any duplicates
+gsdat <- gsdat[which(gsdat$DOWS > 0), ] ## select observations located on land only
 gsdat$user <- sub("@.*", "", as.character(gsdat$user)) ## shortens observer ID's
 
 # Write output file -------------------------------------------------------
