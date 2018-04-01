@@ -7,6 +7,7 @@ suppressPackageStartupMessages({
   require(downloader)
   require(rgdal)
   require(raster)
+  require(jsonlite)
   require(leaflet)
   require(htmlwidgets)
   require(wordcloud)
@@ -34,6 +35,22 @@ unzip("MW_250m_2018.zip", overwrite = T)
 glist <- list.files(pattern="tif", full.names = T)
 grids <- stack(glist)
 
+# Count number of buildings per quadrat -----------------------------------
+bp <- geos[which(geos$BP == "Y"), ] ## identify quadrats with buildings
+bp$bloc <- as.character(bp$bloc)
+
+# Counting loop from tagged building locations within quadrats with buildings
+n <- rep(NA, nrow(bp))
+for(i in 1:nrow(bp)) {
+  t <- fromJSON(bp$bloc[i])
+  n[i] <- nrow(t$features)
+}
+n ## vector of number of buildings per quadrat with buildings
+ba <- geos[which(geos$BP == "N"), ]
+ba$n <- 0
+bp <- cbind(bp, n)
+geos <- rbind(ba, bp)
+
 # Data setup ---------------------------------------------------------------
 # attach GADM-L3 admin unit names from shape
 coordinates(geos) <- ~lon+lat
@@ -53,7 +70,7 @@ projection(geos) <- projection(grids)
 geosgrid <- extract(grids, geos)
 gsdat <- as.data.frame(cbind(geos, geosgrid)) 
 gsdat <- gsdat[!duplicated(gsdat), ] ## removes any duplicates
-gsdat <- gsdat[which(gsdat$DOWS > 0), ] ## select observations located on land only
+gsdat <- gsdat[which(gsdat$DOWS > 0), ] ## select observations located on land
 gsdat$user <- sub("@.*", "", as.character(gsdat$user)) ## shortens observer ID's
 
 # Write output file -------------------------------------------------------
