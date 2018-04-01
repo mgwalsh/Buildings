@@ -45,12 +45,12 @@ for(i in 1:nrow(bp)) {
   t <- fromJSON(bp$bloc[i])
   n[i] <- nrow(t$features)
 }
-n ## vector of number of buildings per quadrat with buildings
+n ## vector of number of buildings per quadrats with buildings
 ba <- geos[which(geos$BP == "N"), ]
 ba$n <- 0
 bp <- cbind(bp, n)
 geos <- rbind(ba, bp)
-geos <- geos[order(id),]
+geos <- geos[order(geos$id),] ## back in original sample order
 
 # Data setup ---------------------------------------------------------------
 # attach GADM-L3 admin unit names from shape
