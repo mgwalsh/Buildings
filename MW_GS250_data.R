@@ -39,7 +39,7 @@ grids <- stack(glist)
 bp <- geos[which(geos$BP == "Y"), ] ## identify quadrats with buildings
 bp$bloc <- as.character(bp$bloc)
 
-# Counting loop from tagged building locations within quadrats with buildings
+# Counting tagged building locations from quadrats with buildings
 n <- rep(NA, nrow(bp))
 for(i in 1:nrow(bp)) {
   t <- fromJSON(bp$bloc[i])
@@ -85,7 +85,7 @@ w <- leaflet() %>%
 w ## plot widget 
 
 # save widget
-saveWidget(w, 'MW_GS100.html', selfcontained = T)
+saveWidget(w, 'MW_GS250.html', selfcontained = T)
 
 # GeoSurvey contributions -------------------------------------------------
 gscon <- as.data.frame(table(gsdat$user))
