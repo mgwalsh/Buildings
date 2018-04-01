@@ -85,7 +85,7 @@ w <- leaflet() %>%
 w ## plot widget 
 
 # save widget
-saveWidget(w, 'MW_GS250.html', selfcontained = T)
+saveWidget(w, "./Results/MW_GS250.html", selfcontained = T)
 
 # GeoSurvey contributions -------------------------------------------------
 gscon <- as.data.frame(table(gsdat$user))
