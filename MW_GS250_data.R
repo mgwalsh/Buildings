@@ -50,6 +50,7 @@ ba <- geos[which(geos$BP == "N"), ]
 ba$n <- 0
 bp <- cbind(bp, n)
 geos <- rbind(ba, bp)
+geos <- geos[order(id),]
 
 # Data setup ---------------------------------------------------------------
 # attach GADM-L3 admin unit names from shape
@@ -70,7 +71,7 @@ projection(geos) <- projection(grids)
 geosgrid <- extract(grids, geos)
 gsdat <- as.data.frame(cbind(geos, geosgrid)) 
 gsdat <- gsdat[!duplicated(gsdat), ] ## removes any duplicates
-gsdat <- gsdat[which(gsdat$DOWS > 0), ] ## select observations located on land
+gsdat <- gsdat[which(gsdat$DOWS > 0), ] ## selects observations located on land
 gsdat$user <- sub("@.*", "", as.character(gsdat$user)) ## shortens observer ID's
 
 # Write output file -------------------------------------------------------
