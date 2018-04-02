@@ -251,4 +251,4 @@ plot(mask, axes=F)
 # Write prediction files --------------------------------------------------
 gspreds <- stack(preds, 1-st.pred, mask)
 names(gspreds) <- c("gl1","gl2","rf","gb","nn","st","mk")
-writeRaster(gspreds, filename="./Results/TZ_bppreds_2018.tif", datatype="FLT4S", options="INTERLEAVE=BAND", overwrite=T)
+writeRaster(gspreds, filename="./Results/MW_bppreds_2018.tif", datatype="FLT4S", options="INTERLEAVE=BAND", overwrite=T)
