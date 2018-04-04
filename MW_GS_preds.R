@@ -28,12 +28,12 @@ seed <- 12358
 set.seed(seed)
 
 # split data into calibration and validation sets
-gsIndex <- createDataPartition(gsdat$BP, p = 4/5, list = F, times = 1)
+gsIndex <- createDataPartition(gsdat$CP, p = 4/5, list = F, times = 1)
 gs_cal <- gsdat[ gsIndex,]
 gs_val <- gsdat[-gsIndex,]
 
 # GeoSurvey calibration labels
-cp_cal <- gs_cal$BP ## change this to $BP, $CP, $WP
+cp_cal <- gs_cal$CP ## change this to $BP, $CP, $WP or $BIC
 
 # raster calibration features
 gf_cal <- gs_cal[,14:46] ## grid covariates
@@ -100,7 +100,7 @@ registerDoParallel(mc)
 set.seed(1385321)
 tc <- trainControl(method = "cv", classProbs = T,
                    summaryFunction = twoClassSummary, allowParallel = T)
-tg <- expand.grid(mtry = seq(3,10, by=1)) ## model tuning steps
+tg <- expand.grid(mtry = seq(1,5, by=1)) ## model tuning steps
 
 # model training
 rf <- train(gf_cal, cp_cal,
@@ -156,7 +156,7 @@ registerDoParallel(mc)
 set.seed(1385321)
 tc <- trainControl(method = "cv", classProbs = T,
                    summaryFunction = twoClassSummary, allowParallel = T)
-tg <- expand.grid(size = seq(5, 11, by=2), decay = c(0.001, 0.01, 0.1)) ## model tuning steps
+tg <- expand.grid(size = seq(10, 15, by=1), decay = c(0.01, 0.1)) ## model tuning steps
 
 # model training
 nn <- train(gf_cal, cp_cal, 
@@ -185,7 +185,7 @@ gspred <- extract(preds, gs_val)
 gspred <- as.data.frame(cbind(gs_val, gspred))
 
 # stacking model validation labels and features
-cp_val <- gspred$BP ## change this to $BP, $CP, $WP or $BIC as needed
+cp_val <- gspred$CP ## change this to $BP, $CP, $WP or $BIC as needed
 gf_val <- gspred[,47:51] ## subset validation features
 
 # Model stacking ----------------------------------------------------------
@@ -227,7 +227,7 @@ coordinates(gsdat) <- ~x+y
 projection(gsdat) <- projection(preds)
 gspred <- extract(preds, gsdat)
 gspred <- as.data.frame(cbind(gsdat, gspred))
-write.csv(gsdat, "./Results/TZ_WP_pred.csv", row.names = F) ## write dataframe
+write.csv(gsdat, "./Results/MW_CP_pred.csv", row.names = F) ## write dataframe
 
 # stacking model labels and features
 cp_all <- gspred$CP ## change this to $BP, $CP or $WP
@@ -251,4 +251,4 @@ plot(mask, axes=F)
 # Write prediction files --------------------------------------------------
 gspreds <- stack(preds, 1-st.pred, mask)
 names(gspreds) <- c("gl1","gl2","rf","gb","nn","st","mk")
-writeRaster(gspreds, filename="./Results/MW_bppreds_2018.tif", datatype="FLT4S", options="INTERLEAVE=BAND", overwrite=T)
+writeRaster(gspreds, filename="./Results/MW_cppreds_2018.tif", datatype="FLT4S", options="INTERLEAVE=BAND", overwrite=T)
