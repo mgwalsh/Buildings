@@ -19,7 +19,7 @@ dir.create("MW_GS250", showWarnings = F)
 setwd("./MW_GS250")
 
 # download GeoSurvey data
-download("https://www.dropbox.com/s/utnsml3szjlyg5b/mw_buildings_2018.csv.zip?raw=1", "mw_buildings_2018.csv.zip", mode = "wb")
+download("https://www.dropbox.com/s/nthly9onmqbt1vn/mw_buildings_2018.csv.zip?raw=1", "mw_buildings_2018.csv.zip", mode = "wb")
 unzip("mw_buildings_2018.csv.zip", overwrite = T)
 geos <- read.table("mw_buildings_2018.csv", header = T, sep = ",")
 geos$BIC <- as.factor(ifelse(geos$CP == "Y" & geos$BP == "Y", "Y", "N")) ## identifies croplands with buildings
