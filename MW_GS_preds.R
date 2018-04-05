@@ -243,12 +243,15 @@ plot(cp_eall, 'ROC') ## plot ROC curve
 
 # Generate feature mask ---------------------------------------------------
 t <- threshold(cp_eval) ## calculate thresholds based on ROC
-r1 <- matrix(c(0, t[,2], 0, t[,2], 1, 1), ncol=3, byrow = T) ## set threshold value <spec_sens>
-r2 <- matrix(c(0, t[,1], 0, t[,1], 1, 1), ncol=3, byrow = T) ## set threshold value <kappa>
-mask1 <- reclassify(1-st.pred, r1) ## reclassify stacked predictions <spec_sens> threshold
-mask2 <- reclassify(1-st.pred, r2) ## ditto <kappa> threshold
+r <- matrix(c(0, t[,1], 0, t[,1], 1, 1), ncol=3, byrow = T) ## set threshold value <kappa>
+mask <- reclassify(1-st.pred, r) ## reclassify stacked predictions <kappa> threshold
 
 # Write prediction grids --------------------------------------------------
-gspreds <- stack(preds, 1-st.pred, mask1, mask2)
-names(gspreds) <- c("gl1","gl2","rf","gb","nn","st","mk1","mk2")
+gspreds <- stack(preds, 1-st.pred, mask)
+names(gspreds) <- c("gl1","gl2","rf","gb","nn","st","mk")
 writeRaster(gspreds, filename="./Results/MW_bppreds_2018.tif", datatype="FLT4S", options="INTERLEAVE=BAND", overwrite=T)
+
+# Write output data frame -------------------------------------------------
+gspre <- extract(gspreds, gsdat)
+gsout <- as.data.frame(cbind(gsdat, gspre))
+write.csv(gsout, "./Results/MW_gsout.csv", row.names = F)
