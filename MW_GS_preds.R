@@ -28,12 +28,12 @@ seed <- 12358
 set.seed(seed)
 
 # split data into calibration and validation sets
-gsIndex <- createDataPartition(gsdat$CP, p = 4/5, list = F, times = 1)
+gsIndex <- createDataPartition(gsdat$BP, p = 4/5, list = F, times = 1)
 gs_cal <- gsdat[ gsIndex,]
 gs_val <- gsdat[-gsIndex,]
 
 # GeoSurvey calibration labels
-cp_cal <- gs_cal$CP ## change this to $BP, $CP, $WP or $BIC
+cp_cal <- gs_cal$BP ## change this to $BP, $CP, $WP or $BIC
 
 # raster calibration features
 gf_cal <- gs_cal[,14:46] ## grid covariates
@@ -100,7 +100,7 @@ registerDoParallel(mc)
 set.seed(1385321)
 tc <- trainControl(method = "cv", classProbs = T,
                    summaryFunction = twoClassSummary, allowParallel = T)
-tg <- expand.grid(mtry = seq(1,5, by=1)) ## model tuning steps
+tg <- expand.grid(mtry = seq(3,10, by=1)) ## model tuning steps
 
 # model training
 rf <- train(gf_cal, cp_cal,
@@ -185,7 +185,7 @@ gspred <- extract(preds, gs_val)
 gspred <- as.data.frame(cbind(gs_val, gspred))
 
 # stacking model validation labels and features
-cp_val <- gspred$CP ## change this to $BP, $CP, $WP or $BIC as needed
+cp_val <- gspred$BP ## change this to $BP, $CP, $WP or $BIC as needed
 gf_val <- gspred[,47:51] ## subset validation features
 
 # Model stacking ----------------------------------------------------------
@@ -226,11 +226,10 @@ plot(cp_eval, 'ROC') ## plot ROC curve
 coordinates(gsdat) <- ~x+y
 projection(gsdat) <- projection(preds)
 gspred <- extract(preds, gsdat)
-gspred <- as.data.frame(cbind(gsdat, gspred))
-write.csv(gsdat, "./Results/MW_CP_pred.csv", row.names = F) ## write dataframe
+gspred <- as.data.frame(cbind(gsdat, gspred, 1-st.pred))
 
 # stacking model labels and features
-cp_all <- gspred$CP ## change this to $BP, $CP or $WP
+cp_all <- gspred$BP ## change this to $BP, $CP or $WP
 gf_all <- gspred[,47:51] ## subset validation features
 
 # ROC calculation
