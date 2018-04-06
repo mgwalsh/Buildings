@@ -229,7 +229,7 @@ gspred <- extract(preds, gsdat)
 gspred <- as.data.frame(cbind(gsdat, gspred, 1-st.pred))
 
 # stacking model labels and features
-cp_all <- gspred$BP ## change this to $BP, $CP or $WP
+cp_all <- gspred$BP ## change this to $CP or $WP or $BIC
 gf_all <- gspred[,47:51] ## subset validation features
 
 # ROC calculation
