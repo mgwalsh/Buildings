@@ -28,12 +28,12 @@ seed <- 12358
 set.seed(seed)
 
 # split data into calibration and validation sets
-gsIndex <- createDataPartition(gsdat$CP, p = 4/5, list = F, times = 1)
+gsIndex <- createDataPartition(gsdat$BP, p = 4/5, list = F, times = 1)
 gs_cal <- gsdat[ gsIndex,]
 gs_val <- gsdat[-gsIndex,]
 
 # GeoSurvey calibration labels
-cp_cal <- gs_cal$CP ## change this to $BP, $CP, $WP or $BIC
+cp_cal <- gs_cal$BP ## change this to $BP, $CP, $WP or $BIC
 
 # raster calibration features
 gf_cal <- gs_cal[,14:46] ## grid covariates
@@ -185,7 +185,7 @@ gspred <- extract(preds, gs_val)
 gspred <- as.data.frame(cbind(gs_val, gspred))
 
 # stacking model validation labels and features
-cp_val <- gspred$CP ## change this to $BP, $CP, $WP or $BIC as needed
+cp_val <- gspred$BP ## change this to $BP, $CP, $WP or $BIC as needed
 gf_val <- gspred[,47:51] ## subset validation features
 
 # Model stacking ----------------------------------------------------------
@@ -230,7 +230,7 @@ plot(mask, axes=F, legend=F)
 # Write prediction grids --------------------------------------------------
 gspreds <- stack(preds, 1-st.pred, mask)
 names(gspreds) <- c("gl1","gl2","rf","gb","nn","st","mk")
-writeRaster(gspreds, filename="./Results/MW_cppreds_2018.tif", datatype="FLT4S", options="INTERLEAVE=BAND", overwrite=T)
+writeRaster(gspreds, filename="./Results/MW_bppreds_2018.tif", datatype="FLT4S", options="INTERLEAVE=BAND", overwrite=T)
 
 # Write output data frame -------------------------------------------------
 gspre <- extract(gspreds, gsdat)
