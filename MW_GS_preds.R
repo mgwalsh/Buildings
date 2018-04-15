@@ -239,3 +239,20 @@ gspre <- extract(gspreds, gsdat)
 gsout <- as.data.frame(cbind(gsdat, gspre))
 write.csv(gsout, "./Results/MW_bpout.csv", row.names = F)
 
+# Prediction map widget ---------------------------------------------------
+# ensemble prediction map 
+pred <- 1-st.pred ## GeoSurvey ensemble probability
+
+# set color pallet
+pal <- colorBin("Reds", domain = 0:1) 
+
+# render map
+w <- leaflet() %>% 
+  addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
+  addRasterImage(pred, colors = pal, opacity = 0.5) %>%
+  addLegend(pal = pal, values = values(pred), title = "Probability")
+w ## plot widget 
+
+# save widget
+saveWidget(w, "./Results/MW_BP_prob.html", selfcontained = T)
+
