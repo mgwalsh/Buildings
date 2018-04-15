@@ -1,4 +1,4 @@
-# Stacked predictions of Malawi 250m GeoSurvey observations
+# Stacked predictions of Malawi 250m GeoSurvey building presence/absence observations
 # M. Walsh, March 2018
 
 # Required packages
@@ -129,8 +129,8 @@ tc <- trainControl(method = "cv", classProbs = T, summaryFunction = twoClassSumm
                    allowParallel = T)
 
 ## for initial<gbm> tuning guidelines see @ https://stats.stackexchange.com/questions/25748/what-are-some-useful-guidelines-for-gbm-parameters
-tg <- expand.grid(interaction.depth = seq(1,5, by=1), shrinkage = 0.001, n.trees = 501,
-                  n.minobsinnode = seq(100,500, by=100)) ## model tuning steps
+tg <- expand.grid(interaction.depth = seq(5,20, by=5), shrinkage = 0.001, n.trees = 501,
+                  n.minobsinnode = seq(25,100, by=25)) ## model tuning steps
 
 # model training
 gb <- train(gf_cal, cp_cal, 
@@ -233,6 +233,9 @@ names(gspreds) <- c("gl1","gl2","rf","gb","nn","st","mk")
 writeRaster(gspreds, filename="./Results/MW_bppreds_2018.tif", datatype="FLT4S", options="INTERLEAVE=BAND", overwrite=T)
 
 # Write output data frame -------------------------------------------------
+coordinates(gsdat) <- ~x+y
+projection(gsdat) <- projection(grids)
 gspre <- extract(gspreds, gsdat)
 gsout <- as.data.frame(cbind(gsdat, gspre))
-write.csv(gsout, "./Results/MW_gsout.csv", row.names = F)
+write.csv(gsout, "./Results/MW_bpout.csv", row.names = F)
+
