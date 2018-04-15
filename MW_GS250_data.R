@@ -1,4 +1,4 @@
-# Malawi 250m resolution building distribution map data setup 
+# Malawi 250m resolution building distribution data setup 
 # M. Walsh, March 2018
 
 # Required packages
