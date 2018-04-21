@@ -33,7 +33,7 @@ gs_cal <- gsdat[ gsIndex,]
 gs_val <- gsdat[-gsIndex,]
 
 # GeoSurvey calibration labels
-cp_cal <- gs_cal$BP ## change this to $BP, $CP, $WP or $BIC
+cp_cal <- gs_cal$BP ## change this to $BP, $CP, $WP or $BIC as needed
 
 # raster calibration features
 gf_cal <- gs_cal[,14:46] ## grid covariates
@@ -230,6 +230,7 @@ plot(mask, axes=F, legend=F)
 # Write prediction grids --------------------------------------------------
 gspreds <- stack(preds, 1-st.pred, mask)
 names(gspreds) <- c("gl1","gl2","rf","gb","nn","st","mk")
+# change this to $BP, $CP, $WP or $BIC as needed
 writeRaster(gspreds, filename="./Results/MW_bppreds_2018.tif", datatype="FLT4S", options="INTERLEAVE=BAND", overwrite=T)
 
 # Write output data frame -------------------------------------------------
@@ -237,7 +238,7 @@ coordinates(gsdat) <- ~x+y
 projection(gsdat) <- projection(grids)
 gspre <- extract(gspreds, gsdat)
 gsout <- as.data.frame(cbind(gsdat, gspre))
-write.csv(gsout, "./Results/MW_bpout.csv", row.names = F)
+write.csv(gsout, "./Results/MW_bpout.csv", row.names = F) ## change this to $BP, $CP, $WP or $BIC as needed
 
 # Prediction map widget ---------------------------------------------------
 # ensemble prediction map 
