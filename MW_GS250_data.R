@@ -1,5 +1,5 @@
 # Malawi 250m resolution building distribution data setup 
-# M. Walsh, March 2018
+# M. Walsh & J. Chen, March 2018
 
 # Required packages
 # install.packages(c("downloader","rgdal","raster","leaflet","htmlwidgets","wordcloud")), dependencies=TRUE)
