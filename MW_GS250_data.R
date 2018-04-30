@@ -47,7 +47,7 @@ for(i in 2:nrow(bp)) {
   bcoord_temp <- do.call("rbind", c$feature$geometry$coordinates)
   bcoord <- rbind(bcoord, bcoord_temp)
 }
-bcoord ## vector of coordinates per quadrats with buildings
+bcoord <- as.data.frame(bcoord) ## vector of coordinates per quadrats with buildings
 colnames(bcoord) <- c("lon","lat")
 
 # number of tagged building locations from quadrats with buildings
@@ -94,7 +94,7 @@ write.csv(gsdat, "./Results/MW_gsdat.csv", row.names = F)
 # render map
 w <- leaflet() %>% 
   addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
-  addCircleMarkers(gsdat$lon, gsdat$lat, clusterOptions = markerClusterOptions())
+  addCircleMarkers(bcoord$lon, bcoord$lat, clusterOptions = markerClusterOptions())
 w ## plot widget 
 
 # save widget
@@ -104,3 +104,4 @@ saveWidget(w, "MW_GS250.html", selfcontained = T)
 gscon <- as.data.frame(table(gsdat$user))
 set.seed(1235813)
 wordcloud(gscon$Var1, freq = gscon$Freq, scale = c(4,0.1), random.order = T)
+
