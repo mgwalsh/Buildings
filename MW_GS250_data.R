@@ -41,13 +41,16 @@ bp$bloc <- as.character(bp$bloc)
 
 # coordinates of tagged building locations from quadrats with buildings
 c <- fromJSON(bp$bloc[1])
-coords <- do.call("rbind", c$feature$geometry$coordinates)
+bcoord <- do.call("rbind", c$feature$geometry$coordinates)
 for(i in 2:nrow(bp)) {
   c <- fromJSON(bp$bloc[i])
-  coords_temp <- do.call("rbind", c$feature$geometry$coordinates)
-  coords <- rbind(coords, coords_temp)
+  bcoord_temp <- do.call("rbind", c$feature$geometry$coordinates)
+  bcoord <- rbind(bcoord, bcoord_temp)
 }
-coords ## vector of coordinates per quadrats with buildings
+bcoord ## vector of coordinates per quadrats with buildings
+colnames(bcoord) <- c("lon","lat")
+dir.create("Results", showWarnings = F)
+write.csv(bcoord, "./Results/MW_bcoord.csv", row.names = F)
 
 # number of tagged building locations from quadrats with buildings
 bcount <- rep(NA, nrow(bp))
@@ -85,7 +88,6 @@ gsdat <- gsdat[which(gsdat$DOWS > 0), ] ## selects observations located on land
 gsdat$user <- sub("@.*", "", as.character(gsdat$user)) ## shortens observer ID's
 
 # Write output file -------------------------------------------------------
-dir.create("Results", showWarnings = F)
 write.csv(gsdat, "./Results/MW_gsdat.csv", row.names = F)
 
 # GeoSurvey map widget ----------------------------------------------------
