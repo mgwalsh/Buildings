@@ -39,6 +39,16 @@ grids <- stack(glist)
 bp <- geos[which(geos$BP == "Y"), ] ## identify quadrats with buildings
 bp$bloc <- as.character(bp$bloc)
 
+# coordinates of tagged building locations from quadrats with buildings
+c <- fromJSON(bp$bloc[1])
+coords <- do.call("rbind", c$feature$geometry$coordinates)
+for(i in 2:nrow(bp)) {
+  c <- fromJSON(bp$bloc[i])
+  coords_temp <- do.call("rbind", c$feature$geometry$coordinates)
+  coords <- rbind(coords, coords_temp)
+}
+coords ## vector of coordinates per quadrats with buildings
+
 # number of tagged building locations from quadrats with buildings
 bcount <- rep(NA, nrow(bp))
 for(i in 1:nrow(bp)) {
