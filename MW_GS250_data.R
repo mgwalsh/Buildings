@@ -35,7 +35,8 @@ unzip("MW_250m_2018.zip", overwrite = T)
 glist <- list.files(pattern="tif", full.names = T)
 grids <- stack(glist)
 
-# Count number of buildings per quadrat -----------------------------------
+
+# Coordinates and number of buildings per quadrat -------------------------
 bp <- geos[which(geos$BP == "Y"), ] ## identify quadrats with buildings
 bp$bloc <- as.character(bp$bloc)
 
