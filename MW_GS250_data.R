@@ -49,8 +49,6 @@ for(i in 2:nrow(bp)) {
 }
 bcoord ## vector of coordinates per quadrats with buildings
 colnames(bcoord) <- c("lon","lat")
-dir.create("Results", showWarnings = F)
-write.csv(bcoord, "./Results/MW_bcoord.csv", row.names = F)
 
 # number of tagged building locations from quadrats with buildings
 bcount <- rep(NA, nrow(bp))
@@ -87,7 +85,9 @@ gsdat <- gsdat[!duplicated(gsdat), ] ## removes any unintentional duplicates
 gsdat <- gsdat[which(gsdat$DOWS > 0), ] ## selects observations located on land
 gsdat$user <- sub("@.*", "", as.character(gsdat$user)) ## shortens observer ID's
 
-# Write output file -------------------------------------------------------
+# Write output files ------------------------------------------------------
+dir.create("Results", showWarnings = F)
+write.csv(bcoord, "./Results/MW_bcoord.csv", row.names = F)
 write.csv(gsdat, "./Results/MW_gsdat.csv", row.names = F)
 
 # GeoSurvey map widget ----------------------------------------------------
