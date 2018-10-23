@@ -232,7 +232,7 @@ w <- leaflet() %>%
   setView(lng = mean(gsdat$lon), lat = mean(gsdat$lat), zoom = 8) %>%
   addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
   addRasterImage(pred, colors = pal, opacity = 0.6, maxBytes=6000000) %>%
-  addLegend(pal = pal, values = values(pred), title = "Probability")
+  addLegend(pal = pal, values = values(pred), title = "Building probability")
 w ## plot widget 
 saveWidget(w, 'DRC_BP_prob.html', selfcontained = T) ## save html ... change feature names here
 
