@@ -219,7 +219,7 @@ write.csv(gsout, "./Results/DRC_BP_out.csv", row.names = F) ## ... change featur
 
 # Overall performance measures --------------------------------------------
 # working on it
-# perf <- gsout[,c(8,68,67)]
+# perf <- gsout[,c(8,68,67)] ## change columns
 # perf$mk <- as.factor(ifelse(perf$mk == 1, c("Y"), c("N")))
 # perf$N <- 1-perf$st
 # colnames(perf) <- c("obs","pred","Y","N")
