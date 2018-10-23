@@ -26,16 +26,15 @@ seed <- 12358
 set.seed(seed)
 
 # split data into calibration and validation sets
-gsdat <- gsdat[ which(gsdat$CP == 'Y'), ] ## selects observed croplands only
-gsIndex <- createDataPartition(gsdat$rice, p = 4/5, list = F, times = 1)
+gsIndex <- createDataPartition(gsdat$BP, p = 4/5, list = F, times = 1)
 gs_cal <- gsdat[ gsIndex,]
 gs_val <- gsdat[-gsIndex,]
 
 # GeoSurvey calibration labels
-cp_cal <- gs_cal$rice ## change this to include other dependent variables e.g, $BIC, $BP
+cp_cal <- gs_cal$BP ## change this to include other dependent variables e.g, $BIC, $bcount
 
 # raster calibration features
-gf_cal <- gs_cal[,18:62]
+gf_cal <- gs_cal[,13:22]
 
 # Regularized regression <glmnet> -----------------------------------------
 # start doParallel to parallelize model fitting
@@ -156,8 +155,8 @@ gspred <- extract(preds, gs_val)
 gspred <- as.data.frame(cbind(gs_val, gspred))
 
 # stacking model validation labels and features
-cp_val <- gspred$rice ## change this to include other dependent variables e.g, $BP, $BIC
-gf_val <- gspred[,63:66] ## subset validation features
+cp_val <- gspred$BP ## change this to include other dependent variables e.g, $BP, $bcount
+gf_val <- gspred[,23:26] ## subset validation features
 
 # Model stacking ----------------------------------------------------------
 # start doParallel to parallelize model fitting
@@ -208,22 +207,22 @@ confusionMatrix(data = perfv$pred, reference = perfv$obs, positive = "Y")
 gspreds <- stack(preds, 1-st.pred, mask)
 names(gspreds) <- c("rr","rf","gb","nn","st","mk")
 # change this to include other dependent variables e.g, $BP, $BIC
-writeRaster(gspreds, filename="./Results/TZ_rice_preds_2018.tif", datatype="FLT4S", options="INTERLEAVE=BAND", overwrite=T)## ... change feature names here
+writeRaster(gspreds, filename="./Results/DRC_BP_preds_2018.tif", datatype="FLT4S", options="INTERLEAVE=BAND", overwrite=T)## ... change feature names here
 
 # Write output data frame -------------------------------------------------
 coordinates(gsdat) <- ~x+y
 projection(gsdat) <- projection(grids)
 gspre <- extract(gspreds, gsdat)
 gsout <- as.data.frame(cbind(gsdat, gspre))
-# change the below to include other dependent variables e.g, $BIC, $BP
+# change the below to include other dependent variables e.g, $BIC, $bcount
 write.csv(gsout, "./Results/DRC_BP_out.csv", row.names = F) ## ... change feature names here
 
 # Overall performance measures --------------------------------------------
-perf <- gsout[,c(13,68,67)]
-perf$mk <- as.factor(ifelse(perf$mk == 1, c("Y"), c("N")))
-perf$N <- 1-perf$st
-colnames(perf) <- c("obs","pred","Y","N")
-confusionMatrix(data = perf$pred, reference = perf$obs, positive = "Y")
+# perf <- gsout[,c(8,68,67)]
+# perf$mk <- as.factor(ifelse(perf$mk == 1, c("Y"), c("N")))
+# perf$N <- 1-perf$st
+# colnames(perf) <- c("obs","pred","Y","N")
+# confusionMatrix(data = perf$pred, reference = perf$obs, positive = "Y")
 
 # Prediction map widget ---------------------------------------------------
 pred <- 1-st.pred ## GeoSurvey ensemble probability
