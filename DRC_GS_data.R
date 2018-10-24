@@ -24,6 +24,11 @@ unzip("DRC_GS_combine.csv.zip", overwrite = T)
 geos <- read.table("DRC_GS_combine.csv", header = T, sep = ",")
 geos$BIC <- as.factor(ifelse(geos$CP == "Y" & geos$BP == "Y", "Y", "N")) ## identifies croplands with buildings
 
+# download point of vaccination data
+download("https://www.dropbox.com/s/k488snxq2302seh/settlements_visited_2018.csv.zip?raw=1", "settlements_visited_2018.csv.zip", mode = "wb")
+unzip("settlements_visited_2018.csv.zip", overwrite = T)
+vacc <- read.table("settlements_visited_2018.csv", header = T, sep = ",")
+
 # download GADM-L2 shapefile (courtesy: http://www.gadm.org)
 download("https://www.dropbox.com/s/ufvu0a6oou1xwhh/DRC_GADM_L2.zip?raw=1", "DRC_GADM_L2.zip", mode = "wb")
 unzip("DRC_GADM_L2.zip", overwrite = T)
@@ -90,13 +95,22 @@ dir.create("Results", showWarnings = F)
 write.csv(bcoord, "./Results/DRC_bcoord.csv", row.names = F)
 write.csv(gsdat, "./Results/DRC_gsdat.csv", row.names = F)
 
-# GeoSurvey map widget ----------------------------------------------------
+# GeoSurvey map widgets ---------------------------------------------------
 w <- leaflet() %>%
   setView(lng = mean(gsdat$lon), lat = mean(gsdat$lat), zoom = 6) %>%
   addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
   addCircleMarkers(gsdat$lon, gsdat$lat, clusterOptions = markerClusterOptions())
 w ## plot widget 
 saveWidget(w, 'DRC_GS18.html', selfcontained = T) ## save widget
+
+# points of vaccination
+w1 <- leaflet() %>%
+  setView(lng = mean(vacc$lon), lat = mean(vacc$lat), zoom = 6) %>%
+  addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
+  addCircleMarkers(vacc$lon, vacc$lat, clusterOptions = markerClusterOptions())
+w1 ## plot widget 
+saveWidget(w1, 'DRC_vacc_pts.html', selfcontained = T) ## save widget
+
 
 # GeoSurvey contributions -------------------------------------------------
 gscon <- as.data.frame(table(gsdat$observer))
