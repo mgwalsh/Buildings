@@ -19,7 +19,7 @@ suppressPackageStartupMessages({
 # Data setup --------------------------------------------------------------
 # SourceURL <- "https://github.com/mgwalsh/Buildings/blob/master/DRC_GS_data.R"
 # source_url(SourceURL)
-rm(list=setdiff(ls(), c("gsdat","grids"))) ## scrub extraneous objects in memory
+rm(list=setdiff(ls(), c("gsdat","vacc","grids"))) ## scrub extraneous objects in memory
 
 # set calibration/validation set randomization seed
 seed <- 12358
@@ -224,7 +224,8 @@ w <- leaflet() %>%
   setView(lng = mean(gsdat$lon), lat = mean(gsdat$lat), zoom = 7) %>%
   addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
   addRasterImage(pred, colors = pal, opacity = 0.5, maxBytes=6000000) %>%
-  addLegend(pal = pal, values = values(pred), title = "Settlement probability")
+  addLegend(pal = pal, values = values(pred), title = "Settlement probability") %>%
+  addCircleMarkers(vacc$lon, vacc$lat, clusterOptions = markerClusterOptions())
 w ## plot widget 
 saveWidget(w, 'DRC_BP_prob.html', selfcontained = T) ## save html ... change feature names here
 
