@@ -103,7 +103,7 @@ w <- leaflet() %>%
 w ## plot widget 
 saveWidget(w, 'DRC_GS18.html', selfcontained = T) ## save widget
 
-# points of vaccination
+# points of current vaccination
 w1 <- leaflet() %>%
   setView(lng = mean(vacc$lon), lat = mean(vacc$lat), zoom = 6) %>%
   addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
