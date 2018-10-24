@@ -25,9 +25,10 @@ geos <- read.table("DRC_GS_combine.csv", header = T, sep = ",")
 geos$BIC <- as.factor(ifelse(geos$CP == "Y" & geos$BP == "Y", "Y", "N")) ## identifies croplands with buildings
 
 # download point of vaccination data
-download("https://www.dropbox.com/s/k488snxq2302seh/settlements_visited_2018.csv.zip?raw=1", "settlements_visited_2018.csv.zip", mode = "wb")
+download("https://www.dropbox.com/s/2nxypedis19b30e/settlements_visited_2018.csv.zip?raw=1", "settlements_visited_2018.csv.zip", mode = "wb")
 unzip("settlements_visited_2018.csv.zip", overwrite = T)
 vacc <- read.table("settlements_visited_2018.csv", header = T, sep = ",")
+vacc <- vacc[!duplicated(vacc), ] ## removes duplicates
 
 # download GADM-L2 shapefile (courtesy: http://www.gadm.org)
 download("https://www.dropbox.com/s/ufvu0a6oou1xwhh/DRC_GADM_L2.zip?raw=1", "DRC_GADM_L2.zip", mode = "wb")
