@@ -111,7 +111,6 @@ w1 <- leaflet() %>%
 w1 ## plot widget 
 saveWidget(w1, 'DRC_vacc_pts.html', selfcontained = T) ## save widget
 
-
 # GeoSurvey contributions -------------------------------------------------
 gscon <- as.data.frame(table(gsdat$observer))
 set.seed(1235813)
