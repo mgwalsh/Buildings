@@ -217,21 +217,13 @@ gsout <- as.data.frame(cbind(gsdat, gspre))
 # change the below to include other dependent variables e.g, $BIC, $bcount
 write.csv(gsout, "./Results/DRC_BP_out.csv", row.names = F) ## ... change feature names here
 
-# Overall performance measures --------------------------------------------
-# working on it
-# perf <- gsout[,c(8,68,67)] ## change columns
-# perf$mk <- as.factor(ifelse(perf$mk == 1, c("Y"), c("N")))
-# perf$N <- 1-perf$st
-# colnames(perf) <- c("obs","pred","Y","N")
-# confusionMatrix(data = perf$pred, reference = perf$obs, positive = "Y")
-
 # Prediction map widget ---------------------------------------------------
 pred <- 1-st.pred ## GeoSurvey ensemble probability
 pal <- colorBin("Reds", domain = 0:1) ## set color palette
 w <- leaflet() %>% 
   setView(lng = mean(gsdat$lon), lat = mean(gsdat$lat), zoom = 8) %>%
   addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
-  addRasterImage(pred, colors = pal, opacity = 0.7, maxBytes=6000000) %>%
+  addRasterImage(pred, colors = pal, opacity = 0.5, maxBytes=6000000) %>%
   addLegend(pal = pal, values = values(pred), title = "Settlement probability")
 w ## plot widget 
 saveWidget(w, 'DRC_BP_prob.html', selfcontained = T) ## save html ... change feature names here
