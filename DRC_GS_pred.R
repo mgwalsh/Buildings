@@ -1,4 +1,4 @@
-# Stacked predictions of Tanganyika and Haut-Lomami GeoSurvey observations
+# Stacked predictions of Tanganyika and Haut-Lomami GeoSurvey settlements with points of polio vaccinations
 # M. Walsh, October 2018
 
 # Required packages
