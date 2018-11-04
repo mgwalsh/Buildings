@@ -19,16 +19,11 @@ dir.create("DRC_GS", showWarnings = F)
 setwd("./DRC_GS")
 
 # download GeoSurvey data
-download("https://www.dropbox.com/s/5l9vg5rt6f7xnnn/DRC_GS_combine.csv.zip?raw=1", "DRC_GS_combine.csv.zip", mode = "wb")
+download("https://www.dropbox.com/s/upoylz7dyyjzbkg/DRC_GS_combine.csv.zip?raw=1", "DRC_GS_combine.csv.zip", mode = "wb")
 unzip("DRC_GS_combine.csv.zip", overwrite = T)
 geos <- read.table("DRC_GS_combine.csv", header = T, sep = ",")
+geos <- geos[!duplicated(geos[4:5]), ] ## removes spatial (lat/lon pair) duplicates
 geos$BIC <- as.factor(ifelse(geos$CP == "Y" & geos$BP == "Y", "Y", "N")) ## identifies croplands with buildings
-
-# download point of vaccination data
-download("https://www.dropbox.com/s/2nxypedis19b30e/settlements_visited_2018.csv.zip?raw=1", "settlements_visited_2018.csv.zip", mode = "wb")
-unzip("settlements_visited_2018.csv.zip", overwrite = T)
-vacc <- read.table("settlements_visited_2018.csv", header = T, sep = ",")
-vacc <- vacc[!duplicated(vacc), ] ## removes duplicates
 
 # download GADM-L2 shapefile (courtesy: http://www.gadm.org)
 download("https://www.dropbox.com/s/ufvu0a6oou1xwhh/DRC_GADM_L2.zip?raw=1", "DRC_GADM_L2.zip", mode = "wb")
