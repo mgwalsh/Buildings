@@ -19,7 +19,7 @@ suppressPackageStartupMessages({
 # Data setup --------------------------------------------------------------
 # SourceURL <- "https://github.com/mgwalsh/Buildings/blob/master/DRC_GS_data.R"
 # source_url(SourceURL)
-rm(list=setdiff(ls(), c("gsdat","vacc","grids"))) ## scrub extraneous objects in memory
+rm(list=setdiff(ls(), c("gsdat","grids"))) ## scrub extraneous objects in memory
 
 # set calibration/validation set randomization seed
 seed <- 12358
@@ -221,11 +221,10 @@ write.csv(gsout, "./Results/DRC_BP_out.csv", row.names = F) ## ... change featur
 pred <- 1-st.pred ## GeoSurvey ensemble probability
 pal <- colorBin("Reds", domain = 0:1) ## set color palette
 w <- leaflet() %>% 
-  setView(lng = mean(gsdat$lon), lat = mean(gsdat$lat), zoom = 7) %>%
+  setView(lng = mean(gsdat$lon), lat = mean(gsdat$lat), zoom = 8) %>%
   addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
-  addRasterImage(pred, colors = pal, opacity = 0.5, maxBytes=6000000) %>%
-  addLegend(pal = pal, values = values(pred), title = "Settlement probability") %>%
-  addCircleMarkers(vacc$lon, vacc$lat, clusterOptions = markerClusterOptions())
+  addRasterImage(pred, colors = pal, opacity = 0.6, maxBytes=6000000) %>%
+  addLegend(pal = pal, values = values(pred), title = "Settlement prob.")
 w ## plot widget 
 saveWidget(w, 'DRC_BP_prob.html', selfcontained = T) ## save html ... change feature names here
 
