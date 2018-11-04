@@ -214,6 +214,8 @@ coordinates(gsdat) <- ~x+y
 projection(gsdat) <- projection(grids)
 gspre <- extract(gspreds, gsdat)
 gsout <- as.data.frame(cbind(gsdat, gspre))
+gsout$mzone <- ifelse(gsout$mk == 1, "Y", "N")
+confusionMatrix(data = gsout$mzone, reference = gsout$BP, positive = "Y")
 # change the below to include other dependent variables e.g, $BIC, $bcount
 write.csv(gsout, "./Results/DRC_BP_out.csv", row.names = F) ## ... change feature names here
 
